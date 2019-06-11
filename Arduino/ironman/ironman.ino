@@ -22,7 +22,7 @@ int flip;                // Randomly flip the direction every once in a while
 int minPixelValue = 20;  // Min value of brightness
 int maxPixelValue = 255; // Max value of brightness
 int pixelValueDelta = 5; // Delta of brightness between times through the loop
-String color = "Cyan";   // Color of Neopixels
+//String color = "Cyan";   // Color of Neopixels
 
 int ledState = 1;        // the current state of the output pin
 int buttonState;         // the current reading from the input pin
@@ -32,8 +32,18 @@ int lastButtonState = 1; // the previous reading from the input pin
 unsigned long lastDebounceTime = 0; // Last time push button toggled
 unsigned long debounceDelay = 50;   // Debounce time; increase if output flickers
 
+// Enumerate colors to be displayed on Arc Reactor
+enum Colors{
+  CYAN,
+  RED,
+  YELLOW,
+  GREEN
+};
+
+Colors color = CYAN;
+
 void colorChange(){
-  if (color == "Cyan") {
+  if (CircuitPlayground.leftButton() and color == CYAN) {
     // Fill the pixels with stalled CYAN color
 //      CircuitPlayground.setPixelColor(1,0,255,255);
     // Fill the pixels with moving LEDs
@@ -41,33 +51,40 @@ void colorChange(){
       // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
       CircuitPlayground.setPixelColor(i, 0, pixelValue, pixelValue); // Cyan
     }
-    color = "Red";
+    color = RED;
   }
-  else if (color == "Red") {
+  else if (CircuitPlayground.leftButton() and color == RED) {
     for(int i=0; i<numPixels; i++) {
       // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
       CircuitPlayground.setPixelColor(i, pixelValue, 0, 0); // Red
     }
-    color = "Yellow";
+    color = YELLOW;
   }
-  else if (color == "Yellow") {
+  else if (CircuitPlayground.leftButton() and color == YELLOW) {
     for(int i=0; i<numPixels; i++) {
       // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
       CircuitPlayground.setPixelColor(i, pixelValue, pixelValue, 0); // Yellow
     }
-    color = "Green";
+    color = GREEN;
   }
-  else if (color == "Green") {
+  else if (CircuitPlayground.leftButton() and color == GREEN) {
     for(int i=0; i<numPixels; i++) {
       // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
       CircuitPlayground.setPixelColor(i, 0, pixelValue, 0); // Green
     }
-    color = "Cyan";
+    color = CYAN;
   }
 }
 
-void arcReactor(){
-  // Randomly flip the direction of the pixel increase/decreasure
+// The setup function runs once when you press reset or power the board
+void setup() {
+  Serial.begin(115200);                      // Allow serial communication
+  CircuitPlayground.begin();
+}
+
+// The loop function runs over and over again forever
+void loop() {
+  // Randomly flip the direction of the pixel increase/decrease
   flip = random(32);
   if(flip > 20) {
     dir = 1 - dir;
@@ -97,19 +114,14 @@ void arcReactor(){
   }
   // If slide switch is to the right
   else {
-    colorChange();
+    for(int i=0; i<numPixels; i++) {
+      // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
+      CircuitPlayground.setPixelColor(i, 0, pixelValue, pixelValue); // Cyan
+    }
   }
-}
-
-// The setup function runs once when you press reset or power the board
-void setup() {
-  Serial.begin(115200);                      // Allow serial communication
-  CircuitPlayground.begin();
-}
-
-// The loop function runs over and over again forever
-void loop() {
-
+  
+  
+  /*
   // The left button will toggle actions between button presses
   if (button_pressed == false and CircuitPlayground.leftButton()) {
     button_pressed = true;
@@ -162,5 +174,6 @@ void loop() {
     CircuitPlayground.redLED(LOW); // LED off
     Serial.println("LED OFF");
   }
+  */
   
 }
