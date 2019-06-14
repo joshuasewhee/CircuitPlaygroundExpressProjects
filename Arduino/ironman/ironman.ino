@@ -42,40 +42,6 @@ enum Colors{
 
 Colors color = CYAN;
 
-void colorChange(){
-  if (CircuitPlayground.leftButton() and color == CYAN) {
-    // Fill the pixels with stalled CYAN color
-//      CircuitPlayground.setPixelColor(1,0,255,255);
-    // Fill the pixels with moving LEDs
-    for(int i=0; i<numPixels; i++) {
-      // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
-      CircuitPlayground.setPixelColor(i, 0, pixelValue, pixelValue); // Cyan
-    }
-    color = RED;
-  }
-  else if (CircuitPlayground.leftButton() and color == RED) {
-    for(int i=0; i<numPixels; i++) {
-      // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
-      CircuitPlayground.setPixelColor(i, pixelValue, 0, 0); // Red
-    }
-    color = YELLOW;
-  }
-  else if (CircuitPlayground.leftButton() and color == YELLOW) {
-    for(int i=0; i<numPixels; i++) {
-      // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
-      CircuitPlayground.setPixelColor(i, pixelValue, pixelValue, 0); // Yellow
-    }
-    color = GREEN;
-  }
-  else if (CircuitPlayground.leftButton() and color == GREEN) {
-    for(int i=0; i<numPixels; i++) {
-      // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
-      CircuitPlayground.setPixelColor(i, 0, pixelValue, 0); // Green
-    }
-    color = CYAN;
-  }
-}
-
 // The setup function runs once when you press reset or power the board
 void setup() {
   Serial.begin(115200);                      // Allow serial communication
@@ -111,69 +77,65 @@ void loop() {
   // If slide switch is to the left
   if (CircuitPlayground.slideSwitch()){
      CircuitPlayground.clearPixels();
+     color = CYAN;
   }
   // If slide switch is to the right
   else {
-    for(int i=0; i<numPixels; i++) {
+    if (color == CYAN) {
+      for(int i=0; i<numPixels; i++) {
       // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
       CircuitPlayground.setPixelColor(i, 0, pixelValue, pixelValue); // Cyan
-    }
-  }
-  
-  
-  /*
-  // The left button will toggle actions between button presses
-  if (button_pressed == false and CircuitPlayground.leftButton()) {
-    button_pressed = true;
-  }
-  else if (button_pressed == true and CircuitPlayground.leftButton()){
-    button_pressed = false;
-  }
-
-  // Debouncing starts here
-  // Read the state of the left push button into a local variable
-  int reading = button_pressed;
-
-  // check to see if you just pressed the button
-  // (i.e. the input went from LOW to HIGH), and you've waited long enough
-  // since the last press to ignore any noise:
-
-  // If the push button changed due to noise:
-  if (reading != lastButtonState){
-    // Reset the debouncing timer
-    lastDebounceTime = millis();
-  }
-
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    // whatever the reading is at, it's been there for longer than the debounce
-    // delay, so take it as the actual current state:
-
-    // If the button state has changed:
-    if (reading != buttonState) {
-      // Assign the new state (toggle)
-      buttonState = reading;
-
-      // Only toggle the LED if the new button state is HIGH
-      if (buttonState == HIGH) {
-        ledState = !ledState;
       }
     }
+    else if (color == RED) {
+       for(int i=0; i<numPixels; i++) {
+      // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
+      CircuitPlayground.setPixelColor(i, pixelValue, 0, 0); // Red
+      }
+    }
+    else if (color == YELLOW) {
+      for(int i=0; i<numPixels; i++) {
+      // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
+      CircuitPlayground.setPixelColor(i, pixelValue, pixelValue, 0); // Red
+      }
+    }
+    else if (color == GREEN) {
+      for(int i=0; i<numPixels; i++) {
+      // CircuitPlayground.setPixelColor(pixelNumber, R, G, B); // Color
+      CircuitPlayground.setPixelColor(i, 0, pixelValue, 0); // Yellow
+      }
+    }    
   }
-
-  // Save the reading. Next time through the loop, it'll be the lastButtonState
-  lastButtonState = reading;
   
-  Serial.print("Button state = ");
-  Serial.println(buttonState);
-
-  if (buttonState){
-    CircuitPlayground.redLED(HIGH); // LED on
-    Serial.println("LED ON");
+  if (CircuitPlayground.leftButton()) {
+    switch (color){
+      case CYAN:
+        color = RED;
+        break;
+      case RED:
+        color = YELLOW;
+        break;
+      case YELLOW:
+        color = GREEN;
+        break;
+      case GREEN:
+        color = CYAN; // Reset color to CYAN
+        break;
+    }
   }
-  else{
-    CircuitPlayground.redLED(LOW); // LED off
-    Serial.println("LED OFF");
-  }
-  */
   
+//  // The left button will toggle actions between button presses
+//  if (button_pressed == false and CircuitPlayground.leftButton()) {
+//    button_pressed = true;
+//  }
+//  else if (button_pressed == true and CircuitPlayground.leftButton()){
+//    button_pressed = false;
+//  }
+//
+//  if (button_pressed){
+//    CircuitPlayground.redLED(HIGH); // LED on
+//  }
+//  else{
+//    CircuitPlayground.redLED(LOW); // LED off
+//  }
 }
